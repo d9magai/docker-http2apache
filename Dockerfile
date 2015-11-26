@@ -61,7 +61,7 @@ RUN mkdir -p /opt/httpd_build \
     && curl -o httpd-2.4.17.tar.bz2  http://ftp.jaist.ac.jp/pub/apache//httpd/httpd-2.4.17.tar.bz2 \
     && tar xvf httpd-2.4.17.tar.bz2 \
     && cd httpd-2.4.17 \
-    && ./configure --enable-http2 --enable-ssl --enable-so --enable-mods-shared=all \
+    && ./configure --enable-http2 --enable-ssl --with-ssl=$OPENSSL_PREFIX --enable-so --enable-mods-shared=all \
     && make \
     && make install \
     && rm -rf /opt/httpd_build
