@@ -8,12 +8,12 @@ ENV OPENSSL_BASENAME openssl-$OPENSSL_VERSION
 ENV OPENSSL_ARCHIVE $OPENSSL_BASENAME.tar.gz
 ENV OPENSSL_ARCHIVE_URL https://www.openssl.org/source/$OPENSSL_ARCHIVE
 
-ENV LIBNGHTTP2_PREFIX /opt/libnghttp2
-ENV LIBNGHTTP2_SRC_DIR $LIBNGHTTP2_PREFIX/src
-ENV LIBNGHTTP2_VERSION 1.4.0
-ENV LIBNGHTTP2_BASENAME nghttp2-$LIBNGHTTP2_VERSION
-ENV LIBNGHTTP2_ARCHIVE $LIBNGHTTP2_BASENAME.tar.gz
-ENV LIBNGHTTP2_ARCHIVE_URL https://github.com/tatsuhiro-t/nghttp2/releases/download/v$LIBNGHTTP2_VERSION/$LIBNGHTTP2_ARCHIVE
+ENV NGHTTP2_PREFIX /opt/nghttp2
+ENV NGHTTP2_SRC_DIR $NGHTTP2_PREFIX/src
+ENV NGHTTP2_VERSION 1.4.0
+ENV NGHTTP2_BASENAME nghttp2-$NGHTTP2_VERSION
+ENV NGHTTP2_ARCHIVE $NGHTTP2_BASENAME.tar.gz
+ENV NGHTTP2_ARCHIVE_URL https://github.com/tatsuhiro-t/nghttp2/releases/download/v$NGHTTP2_VERSION/$NGHTTP2_ARCHIVE
 
 RUN yum update -y && yum install -y \
     gcc \
@@ -44,17 +44,17 @@ RUN mkdir -p $OPENSSL_SRC_DIR \
 RUN echo "$OPENSSL_PREFIX/lib/" > /etc/ld.so.conf.d/openssl.conf && ldconfig
 ENV PKG_CONFIG_PATH $OPENSSL_PREFIX/lib/pkgconfig/:$PKG_CONFIG_PATH
 
-RUN mkdir -p $LIBNGHTTP2_SRC_DIR \
-    && cd $LIBNGHTTP2_SRC_DIR \
-    && curl -o $LIBNGHTTP2_ARCHIVE -L $LIBNGHTTP2_ARCHIVE_URL \
-    && tar xvf $LIBNGHTTP2_ARCHIVE \
-    && cd $LIBNGHTTP2_BASENAME \
-    && ./configure --prefix=$LIBNGHTTP2_PREFIX \
+RUN mkdir -p $NGHTTP2_SRC_DIR \
+    && cd $NGHTTP2_SRC_DIR \
+    && curl -o $NGHTTP2_ARCHIVE -L $NGHTTP2_ARCHIVE_URL \
+    && tar xvf $NGHTTP2_ARCHIVE \
+    && cd $NGHTTP2_BASENAME \
+    && ./configure --prefix=$NGHTTP2_PREFIX \
     && make \
     && make install \
-    && rm -rf $LIBNGHTTP2_SRC_DIR
-RUN echo "$LIBNGHTTP2_PREFIX/lib/" > /etc/ld.so.conf.d/libnghttp2.conf && ldconfig
-ENV PKG_CONFIG_PATH $LIBNGHTTP2_PREFIX/lib/pkgconfig/:$PKG_CONFIG_PATH
+    && rm -rf $NGHTTP2_SRC_DIR
+RUN echo "$NGHTTP2_PREFIX/lib/" > /etc/ld.so.conf.d/nghttp2.conf && ldconfig
+ENV PKG_CONFIG_PATH $NGHTTP2_PREFIX/lib/pkgconfig/:$PKG_CONFIG_PATH
 
 RUN mkdir -p /opt/httpd_build \
     && cd /opt/httpd_build \
