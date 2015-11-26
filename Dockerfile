@@ -1,6 +1,13 @@
 FROM centos
 MAINTAINER d9magai
 
+ENV OPENSSL_PREFIX /opt/openssl
+ENV OPENSSL_SRC_DIR /opt/openssl/src
+ENV OPENSSL_VERSION 1.0.2d
+ENV OPENSSL_BASENAME openssl-$OPENSSL_VERSION
+ENV OPENSSL_ARCHIVE $OPENSSL_BASENAME.tar.gz
+ENV OPENSSL_ARCHIVE_URL https://www.openssl.org/source/$OPENSSL_ARCHIVE
+
 RUN yum update -y && yum install -y \
     gcc \
     gcc-c++ \
@@ -16,13 +23,6 @@ RUN yum update -y && yum install -y \
     apr-util-devel \
     pcre-devel \
     && yum clean all
-
-ENV OPENSSL_PREFIX /opt/openssl
-ENV OPENSSL_SRC_DIR /opt/openssl/src
-ENV OPENSSL_VERSION 1.0.2d
-ENV OPENSSL_BASENAME openssl-$OPENSSL_VERSION
-ENV OPENSSL_ARCHIVE $OPENSSL_BASENAME.tar.gz
-ENV OPENSSL_ARCHIVE_URL https://www.openssl.org/source/$OPENSSL_ARCHIVE
 
 RUN mkdir -p $OPENSSL_SRC_DIR \
     && cd $OPENSSL_SRC_DIR \
