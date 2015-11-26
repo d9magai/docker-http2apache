@@ -15,6 +15,12 @@ ENV NGHTTP2_BASENAME nghttp2-$NGHTTP2_VERSION
 ENV NGHTTP2_ARCHIVE $NGHTTP2_BASENAME.tar.gz
 ENV NGHTTP2_ARCHIVE_URL https://github.com/tatsuhiro-t/nghttp2/releases/download/v$NGHTTP2_VERSION/$NGHTTP2_ARCHIVE
 
+ENV HTTPD_BUILD_DIR /opt/httpd_build
+ENV HTTPD_VERSION 2.4.17
+ENV HTTPD_BASENAME httpd-$HTTPD_VERSION
+ENV HTTPD_ARCHIVE $HTTPD_BASENAME.tar.bz2
+ENV HTTPD_ARCHIVE_URL http://ftp.jaist.ac.jp/pub/apache//httpd/$HTTPD_ARCHIVE
+
 RUN yum update -y && yum install -y \
     gcc \
     gcc-c++ \
@@ -56,15 +62,15 @@ RUN mkdir -p $NGHTTP2_SRC_DIR \
 RUN echo "$NGHTTP2_PREFIX/lib/" > /etc/ld.so.conf.d/nghttp2.conf && ldconfig
 ENV PKG_CONFIG_PATH $NGHTTP2_PREFIX/lib/pkgconfig/:$PKG_CONFIG_PATH
 
-RUN mkdir -p /opt/httpd_build \
-    && cd /opt/httpd_build \
-    && curl -o httpd-2.4.17.tar.bz2  http://ftp.jaist.ac.jp/pub/apache//httpd/httpd-2.4.17.tar.bz2 \
-    && tar xvf httpd-2.4.17.tar.bz2 \
-    && cd httpd-2.4.17 \
+RUN mkdir -p $HTTPD_BUILD_DIR \
+    && cd $HTTPD_BUILD_DIR \
+    && curl -o $HTTPD_ARCHIVE  $HTTPD_ARCHIVE_URL \
+    && tar xvf $HTTPD_ARCHIVE \
+    && cd $HTTPD_BASENAME \
     && ./configure --enable-http2 --enable-ssl --with-ssl=$OPENSSL_PREFIX --enable-so --enable-mods-shared=all \
     && make \
     && make install \
-    && rm -rf /opt/httpd_build
+    && rm -rf $HTTPD_BUILD_DIR
 
 COPY server.key /usr/local/apache2/conf/server.key
 COPY server.crt /usr/local/apache2/conf/server.crt
