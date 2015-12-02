@@ -4,9 +4,7 @@ MAINTAINER d9magai
 ENV OPENSSL_PREFIX /opt/openssl
 ENV OPENSSL_SRC_DIR $OPENSSL_PREFIX/src
 ENV OPENSSL_VERSION 1.0.2d
-ENV OPENSSL_BASENAME openssl-$OPENSSL_VERSION
-ENV OPENSSL_ARCHIVE $OPENSSL_BASENAME.tar.gz
-ENV OPENSSL_ARCHIVE_URL https://www.openssl.org/source/$OPENSSL_ARCHIVE
+ENV OPENSSL_ARCHIVE_URL https://www.openssl.org/source/openssl-$OPENSSL_VERSION.tar.gz
 
 ENV NGHTTP2_PREFIX /opt/nghttp2
 ENV NGHTTP2_SRC_DIR $NGHTTP2_PREFIX/src
@@ -38,10 +36,8 @@ RUN yum update -y && yum install -y \
     && yum clean all
 
 RUN mkdir -p $OPENSSL_SRC_DIR \
-    && cd $OPENSSL_SRC_DIR \
-    && curl --tlsv1 -o $OPENSSL_ARCHIVE $OPENSSL_ARCHIVE_URL \
-    && tar xvf $OPENSSL_ARCHIVE \
-    && cd $OPENSSL_BASENAME \
+    && curl --tlsv1 -sL $OPENSSL_ARCHIVE_URL | tar xz -C $OPENSSL_SRC_DIR \
+    && cd $OPENSSL_SRC_DIR/openssl-$OPENSSL_VERSION \
     && ./config --prefix=$OPENSSL_PREFIX shared zlib \
     && make \
     && make test \
