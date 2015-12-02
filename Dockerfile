@@ -36,7 +36,6 @@ RUN mkdir -p $OPENSSL_SRC_DIR \
     && cd $OPENSSL_SRC_DIR/openssl-$OPENSSL_VERSION \
     && ./config --prefix=$OPENSSL_PREFIX shared zlib \
     && make \
-    && make test \
     && make install \
     && rm -rf $OPENSSL_SRC_DIR
 RUN echo "$OPENSSL_PREFIX/lib/" > /etc/ld.so.conf.d/openssl.conf && ldconfig
