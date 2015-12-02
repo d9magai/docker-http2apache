@@ -19,14 +19,9 @@ RUN yum update -y && yum install -y \
     gcc \
     gcc-c++ \
     make \
-    autoconf \
-    automake \
     libtool \
-    perl \
     bzip2 \
     zlib-devel \
-    libev-devel \
-    apr-devel \
     apr-util-devel \
     pcre-devel \
     && yum clean all
