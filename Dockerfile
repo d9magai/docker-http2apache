@@ -9,9 +9,7 @@ ENV OPENSSL_ARCHIVE_URL https://www.openssl.org/source/openssl-$OPENSSL_VERSION.
 ENV NGHTTP2_PREFIX /opt/nghttp2
 ENV NGHTTP2_SRC_DIR $NGHTTP2_PREFIX/src
 ENV NGHTTP2_VERSION 1.4.0
-ENV NGHTTP2_BASENAME nghttp2-$NGHTTP2_VERSION
-ENV NGHTTP2_ARCHIVE $NGHTTP2_BASENAME.tar.gz
-ENV NGHTTP2_ARCHIVE_URL https://github.com/tatsuhiro-t/nghttp2/releases/download/v$NGHTTP2_VERSION/$NGHTTP2_ARCHIVE
+ENV NGHTTP2_ARCHIVE_URL https://github.com/tatsuhiro-t/nghttp2/releases/download/v$NGHTTP2_VERSION/nghttp2-$NGHTTP2_VERSION.tar.gz
 
 ENV HTTPD_BUILD_DIR /opt/httpd_build
 ENV HTTPD_VERSION 2.4.17
@@ -47,10 +45,8 @@ RUN echo "$OPENSSL_PREFIX/lib/" > /etc/ld.so.conf.d/openssl.conf && ldconfig
 ENV PKG_CONFIG_PATH $OPENSSL_PREFIX/lib/pkgconfig/:$PKG_CONFIG_PATH
 
 RUN mkdir -p $NGHTTP2_SRC_DIR \
-    && cd $NGHTTP2_SRC_DIR \
-    && curl -o $NGHTTP2_ARCHIVE -L $NGHTTP2_ARCHIVE_URL \
-    && tar xvf $NGHTTP2_ARCHIVE \
-    && cd $NGHTTP2_BASENAME \
+    && curl -sL $NGHTTP2_ARCHIVE_URL | tar xz -C $NGHTTP2_SRC_DIR \
+    && cd $NGHTTP2_SRC_DIR/nghttp2-$NGHTTP2_VERSION \
     && ./configure --prefix=$NGHTTP2_PREFIX \
     && make \
     && make install \
